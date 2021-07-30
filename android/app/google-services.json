@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "473348468320",
+    "project_id": "europrediction-a43f2",
+    "storage_bucket": "europrediction-a43f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473348468320:android:527c7bf30016f45c5b9d05",
+        "android_client_info": {
+          "package_name": "com.shyamk.Euro_prediction"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "473348468320-5eol05f11mme7asc8ld7ql788r29mqm9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgd7bZ9ywngwlC5COsEbiewqHm9MtQ92I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "473348468320-5eol05f11mme7asc8ld7ql788r29mqm9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
