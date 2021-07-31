@@ -78,7 +78,7 @@ class MatchDisplay extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(firstTeam,
+              Text(firstTeam + ' v/s ',
                   style: TextStyle(
                       fontFamily: 'SourceSansPro',
                       fontSize: 40.0,

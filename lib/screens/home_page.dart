@@ -11,15 +11,15 @@ class HomePage extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: HomeDisplay(display: 'RANK #', num: 3),
+                  child: HomeDisplay(display: 'RANK \n#', num: 3),
                 ),
                 Expanded(
-                  child: HomeDisplay(display: 'POINTS ', num: 366),
+                  child: HomeDisplay(display: 'POINTS \n', num: 366),
                 ),
               ],
             ),
           ),
-          Expanded(
+          FittedBox(
             child: NextMatchDisplay(),
           ),
         ],

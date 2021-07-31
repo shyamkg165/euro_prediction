@@ -68,7 +68,7 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
       backgroundColor: Colors.lightBlueAccent,
       body: Column(
         children: <Widget>[
-          Expanded(
+          FittedBox(
             child: CurrentMatch(
                 matchNum: widget.matchNum,
                 firstTeam: widget.firstTeam,

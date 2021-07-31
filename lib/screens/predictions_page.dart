@@ -14,14 +14,16 @@ class PredictionsPage extends StatefulWidget {
 class _PredictionsPageState extends State<PredictionsPage> {
   @override
   void initState() {
-    super.initState();
     updateMatchSchedule();
+    super.initState();
   }
 
   void updateMatchSchedule() async {
-    print('in update match schedule');
+    print('in update match schedule\n');
     final matchSchedule = await _firestore.collection('matchschedule').get();
-
+    matches.clear();
+    print('size');
+    print(matchSchedule.size);
     for (var match in matchSchedule.docs) {
       final int matchNum = match.data()['matchnum'];
       final String firstTeam = match.data()['firstteam'];
@@ -51,8 +53,36 @@ class _PredictionsPageState extends State<PredictionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView(children: matches),
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            ListView.builder(
+              primary: false,
+              shrinkWrap: true,
+              itemCount: matches.length,
+              /*separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(height: 10);
+              },*/
+              itemBuilder: (context, index) {
+                return FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: MatchDisplay(
+                    matchNum: matches[index].matchNum,
+                    firstTeam: matches[index].firstTeam,
+                    secondTeam: matches[index].secondTeam,
+                    firstImg: matches[index].firstImg,
+                    secondImg: matches[index].secondImg,
+                    cutOffTime: matches[index].cutOffTime,
+                    buttonName: matches[index].buttonName,
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
