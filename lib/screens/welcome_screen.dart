@@ -56,11 +56,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     height: controller.value * 100,
                   ),
                 ),
-                TypewriterAnimatedTextKit(
-                  text: ['Euro Prediction'],
-                  textStyle: TextStyle(
-                    fontSize: 45.0,
-                    fontWeight: FontWeight.w900,
+                Expanded(
+                  child: TypewriterAnimatedTextKit(
+                    text: [' Euro Cup \n Prediction'],
+                    textStyle: TextStyle(
+                      fontSize: 45.0,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
               ],

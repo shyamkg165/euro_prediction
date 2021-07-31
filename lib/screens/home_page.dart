@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
                   child: HomeDisplay(display: 'RANK #', num: 3),
                 ),
                 Expanded(
-                  child: HomeDisplay(display: 'POINTS', num: 366),
+                  child: HomeDisplay(display: 'POINTS ', num: 366),
                 ),
               ],
             ),
@@ -40,14 +40,17 @@ class HomeDisplay extends StatelessWidget {
       decoration: BoxDecoration(
           color: Color(0xFF1D1E33), borderRadius: BorderRadius.circular(10.0)),
       child: Center(
-        child: Text(
-          '$display$num',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 100.0,
-            fontWeight: FontWeight.w600,
+        child: FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text(
+            '$display$num',
+            style: TextStyle(
+              color: Colors.redAccent,
+              fontSize: 100.0,
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
         ),
       ),
     );
