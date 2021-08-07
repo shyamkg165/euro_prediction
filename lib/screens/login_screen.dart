@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+//import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:Euro_prediction/components/rounded_button.dart';
 import 'package:Euro_prediction/constants.dart';
 import 'package:Euro_prediction/screens/main_screen.dart';
@@ -21,14 +21,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: ModalProgressHUD(
-          inAsyncCall: showSpinner,
+      body: Container(
+        width: width,
+        height: height,
+        child: SingleChildScrollView(
+          //  child: ModalProgressHUD(
+          //    inAsyncCall: showSpinner,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -82,17 +88,40 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.pushNamed(context, MainScreen.id);
                         }
                         setState(() {
-                          showSpinner = false;
+                          //showSpinner = false;
                         });
                       } catch (e) {
-                        print(e);
+                        print('error caught');
+                        _ackAlert(context);
+                        //print(e);
                       }
                     }),
               ],
             ),
           ),
+          //),
         ),
       ),
+    );
+  }
+
+  Future _ackAlert(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Login Failed'),
+          content: const Text('Please check the emailId and password'),
+          actions: [
+            TextButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

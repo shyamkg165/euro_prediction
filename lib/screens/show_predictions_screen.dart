@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Euro_prediction/display/current_match.dart';
+//import 'package:Euro_prediction/display/current_match.dart';
 import 'package:Euro_prediction/display/predictions_display.dart';
 
 int matchNum;
@@ -33,9 +33,10 @@ class _ShowPredictionsScreenState extends State<ShowPredictionsScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
+
     print('init state');
     setState(() {});
+    super.initState();
   }
 
   @override
@@ -47,7 +48,90 @@ class _ShowPredictionsScreenState extends State<ShowPredictionsScreen> {
       ),
       backgroundColor: Colors.lightBlueAccent,
       body: Container(
-        child: ListView(children: widget.predictions),
+        //child: ListView(children: widget.predictions),
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: Table(
+                border: TableBorder.all(
+                    color: Colors.black, style: BorderStyle.solid, width: 2),
+                children: [
+                  TableRow(children: [
+                    Column(
+                      children: [
+                        Text('Player', style: TextStyle(fontSize: 20.0))
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text('MatchNum', style: TextStyle(fontSize: 20.0))
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text('Result', style: TextStyle(fontSize: 20.0))
+                      ],
+                    ),
+                    Column(
+                      children: [Text('MOM', style: TextStyle(fontSize: 20.0))],
+                    ),
+                    Column(
+                      children: [
+                        Text('Best Fwd', style: TextStyle(fontSize: 20.0))
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text('Best Defender', style: TextStyle(fontSize: 20.0))
+                      ],
+                    ),
+                  ]),
+                  for (var prediction in widget.predictions)
+                    TableRow(
+                      children: [
+                        Column(
+                          children: [
+                            Text(prediction.playerId,
+                                style: TextStyle(fontSize: 20.0))
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(prediction.matchNum,
+                                style: TextStyle(fontSize: 20.0))
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(prediction.matchResult,
+                                style: TextStyle(fontSize: 20.0))
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(prediction.manOfMatch,
+                                style: TextStyle(fontSize: 20.0))
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(prediction.bestAttacker,
+                                style: TextStyle(fontSize: 20.0))
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(prediction.bestDefender,
+                                style: TextStyle(fontSize: 20.0))
+                          ],
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

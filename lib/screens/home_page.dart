@@ -4,8 +4,11 @@ import 'package:Euro_prediction/display/match_display.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //double width = MediaQuery.of(context).size.width;
+    //double height = MediaQuery.of(context).size.height;
     return Container(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Expanded(
             child: Row(
@@ -19,8 +22,13 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-          FittedBox(
-            child: NextMatchDisplay(),
+          Flexible(
+            fit: FlexFit.tight,
+            child: Container(
+              child: FittedBox(
+                child: NextMatchDisplay(),
+              ),
+            ),
           ),
         ],
       ),

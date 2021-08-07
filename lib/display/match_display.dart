@@ -135,7 +135,7 @@ class MatchDisplay extends StatelessWidget {
 
 void getPredictions() async {
   final matchPrediction = await _firestore.collection('matchprediction').get();
-
+  predictions.clear();
   for (var match in matchPrediction.docs) {
     matchNum = match.data()['matchnum'];
     playerId = match.data()['playerid'];
@@ -145,6 +145,7 @@ void getPredictions() async {
     bestDefender = match.data()['bestdefender'];
 
     print(playerId);
+    print(matchNum);
     print(matchResult);
     print(manOfMatch);
     print(bestAttacker);
@@ -152,6 +153,7 @@ void getPredictions() async {
 
     final predictionDisplay = PredictionsDisplay(
       playerId: playerId,
+      matchNum: matchNum.toString(),
       matchResult: matchResult,
       manOfMatch: manOfMatch,
       bestAttacker: bestAttacker,

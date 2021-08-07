@@ -66,21 +66,26 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
         backgroundColor: Colors.blue[900],
       ),
       backgroundColor: Colors.lightBlueAccent,
-      body: Column(
-        children: <Widget>[
-          FittedBox(
-            child: CurrentMatch(
-                matchNum: widget.matchNum,
-                firstTeam: widget.firstTeam,
-                secondTeam: widget.secondTeam,
-                firstImg: widget.firstImg,
-                secondImg: widget.secondImg),
-          ),
-          Expanded(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Flexible(
+              fit: FlexFit.loose,
+              child: FittedBox(
+                child: CurrentMatch(
+                    matchNum: widget.matchNum,
+                    firstTeam: widget.firstTeam,
+                    secondTeam: widget.secondTeam,
+                    firstImg: widget.firstImg,
+                    secondImg: widget.secondImg),
+              ),
+            ),
+            Flexible(
+              fit: FlexFit.loose,
+              child: Column(
+                children: <Widget>[
+                  Container(
                     margin: EdgeInsets.all(15.0),
                     decoration: BoxDecoration(
                       color: Color(0xFF1D1E33),
@@ -119,9 +124,7 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
                       ],
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
+                  Container(
                     margin: EdgeInsets.all(15.0),
                     decoration: BoxDecoration(
                       color: Color(0xFF1D1E33),
@@ -160,9 +163,7 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
                       ],
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
+                  Container(
                     margin: EdgeInsets.all(15.0),
                     decoration: BoxDecoration(
                       color: Color(0xFF1D1E33),
@@ -201,9 +202,7 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
                       ],
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
+                  Container(
                     margin: EdgeInsets.all(15.0),
                     decoration: BoxDecoration(
                       color: Color(0xFF1D1E33),
@@ -242,38 +241,38 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Container(
-            width: 900.0,
-            height: 100.0,
-            margin: EdgeInsets.all(15.0),
-            decoration: BoxDecoration(
-              color: Color(0xFF1D1E33),
-              borderRadius: BorderRadius.circular(10.0),
+            Container(
+              width: 900.0,
+              height: 100.0,
+              margin: EdgeInsets.all(15.0),
+              decoration: BoxDecoration(
+                color: Color(0xFF1D1E33),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: SubmitButton(
+                  title: 'SUBMIT',
+                  colour: Colors.blue[900],
+                  onPressed: () {
+                    matchResultTextController.clear();
+                    manOfMatchTextController.clear();
+                    bestAttackerTextController.clear();
+                    bestDefenderTextController.clear();
+                    print(matchResult);
+                    _firestore.collection('matchprediction').add({
+                      'matchnum': widget.matchNum,
+                      'matchresult': matchResult,
+                      'manofmatch': manOfMatch,
+                      'bestattacker': bestAttacker,
+                      'bestdefender': bestDefender,
+                      'playerid': loggedInUser.email
+                    });
+                  }),
             ),
-            child: SubmitButton(
-                title: 'SUBMIT',
-                colour: Colors.blue[900],
-                onPressed: () {
-                  matchResultTextController.clear();
-                  manOfMatchTextController.clear();
-                  bestAttackerTextController.clear();
-                  bestDefenderTextController.clear();
-                  print(matchResult);
-                  _firestore.collection('matchprediction').add({
-                    'matchnum': widget.matchNum,
-                    'matchresult': matchResult,
-                    'manofmatch': manOfMatch,
-                    'bestattacker': bestAttacker,
-                    'bestdefender': bestDefender,
-                    'playerid': loggedInUser.email
-                  });
-                }),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

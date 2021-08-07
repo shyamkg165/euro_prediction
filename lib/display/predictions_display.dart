@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class PredictionsDisplay extends StatelessWidget {
   PredictionsDisplay(
-      {this.playerId,
+      {this.matchNum,
+      this.playerId,
       this.matchResult,
       this.manOfMatch,
       this.bestAttacker,
       this.bestDefender});
 
+  final String matchNum;
   final String playerId;
   final String matchResult;
   final String manOfMatch;
