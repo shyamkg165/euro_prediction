@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'predictions_page.dart';
@@ -10,12 +11,77 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final _auth = FirebaseAuth.instance;
+  final messageTextController = TextEditingController();
+
+  String messageText;
+
+  User loggedInUser;
+
+  @override
+  void initState() {
+    getCurrentUser();
+    super.initState();
+  }
+
+  void getCurrentUser() {
+    final user = _auth.currentUser;
+    if (user != null) {
+      loggedInUser = user;
+      print(loggedInUser.email);
+    }
+    if (loggedInUser.email == "shyam@gmail.com") {
+      mainScreenChildren = [
+        HomePage(),
+        PredictionsPage(),
+        StandingsPage(),
+        StandingsPage(),
+      ];
+
+      bottomNavigationList = [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.star),
+          label: 'Predictions',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.leaderboard),
+          label: 'Standings',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.smart_toy_rounded),
+          label: 'Admin',
+        ),
+      ];
+    } else {
+      mainScreenChildren = [
+        HomePage(),
+        PredictionsPage(),
+        StandingsPage(),
+      ];
+
+      bottomNavigationList = [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.star),
+          label: 'Predictions',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.leaderboard),
+          label: 'Standings',
+        ),
+      ];
+    }
+  }
+
   int selectedIndex = 0;
-  final List<Widget> mainScreenChildren = [
-    HomePage(),
-    PredictionsPage(),
-    StandingsPage()
-  ];
+  List<Widget> mainScreenChildren;
 
   void onItemTapped(int index) {
     print(index);
@@ -23,6 +89,8 @@ class _MainScreenState extends State<MainScreen> {
       selectedIndex = index;
     });
   }
+
+  List<BottomNavigationBarItem> bottomNavigationList;
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +102,10 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: Colors.lightBlueAccent,
       body: mainScreenChildren[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Predictions'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.leaderboard), label: 'Standings'),
-        ],
-        iconSize: 50.0,
+        items: bottomNavigationList,
+        iconSize: 40.0,
         selectedItemColor: Colors.blueGrey[500],
-        showUnselectedLabels: true,
+        unselectedItemColor: Colors.blueGrey[500],
         currentIndex: selectedIndex,
         onTap: onItemTapped,
       ),
