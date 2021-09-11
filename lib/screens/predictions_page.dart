@@ -66,6 +66,7 @@ class _PredictionsPageState extends State<PredictionsPage> {
                 return SizedBox(height: 10);
               },*/
               itemBuilder: (context, index) {
+                print('inpredictions' + matches[index].matchNum.toString());
                 return FittedBox(
                   fit: BoxFit.fitWidth,
                   child: MatchDisplay(

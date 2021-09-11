@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Euro_prediction/screens/match_predict_screen.dart';
 import 'package:Euro_prediction/screens/show_predictions_screen.dart';
 import 'package:flutter/material.dart';
@@ -108,7 +110,8 @@ class MatchDisplay extends StatelessWidget {
                               secondImg: secondImg)));
                 }
                 if (buttonName == 'SHOW PREDICTIONS') {
-                  getPredictions();
+                  getPredictions(matchNum);
+                  sleep(Duration(milliseconds: 1000));
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -133,8 +136,12 @@ class MatchDisplay extends StatelessWidget {
   }
 }
 
-void getPredictions() async {
-  final matchPrediction = await _firestore.collection('matchprediction').get();
+void getPredictions(int matchNumber) async {
+  final matchPrediction = await _firestore
+      .collection('matchprediction')
+      .where("matchnum", isEqualTo: matchNumber)
+      .get();
+
   predictions.clear();
   for (var match in matchPrediction.docs) {
     matchNum = match.data()['matchnum'];

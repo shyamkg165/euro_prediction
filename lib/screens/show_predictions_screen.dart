@@ -1,3 +1,4 @@
+import 'package:Euro_prediction/display/match_display.dart';
 import 'package:flutter/material.dart';
 //import 'package:Euro_prediction/display/current_match.dart';
 import 'package:Euro_prediction/display/predictions_display.dart';
@@ -41,6 +42,7 @@ class _ShowPredictionsScreenState extends State<ShowPredictionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('size = ' + predictions.length.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text('EURO PREDICTION'),
