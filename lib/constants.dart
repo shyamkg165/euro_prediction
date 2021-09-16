@@ -15,3 +15,8 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32.0)),
   ),
 );
+
+const int kResultPoints = 500;
+const int kMOMPoints = 500;
+const int kAttackerPoints = 250;
+const int kDefenderPoints = 250;

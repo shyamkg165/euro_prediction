@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'predictions_page.dart';
 import 'standings_page.dart';
+import 'completed_match_page.dart';
 
 class MainScreen extends StatefulWidget {
   static const String id = 'main_screen';
@@ -35,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
         HomePage(),
         PredictionsPage(),
         StandingsPage(),
-        StandingsPage(),
+        CompletedMatchPage(),
       ];
 
       bottomNavigationList = [

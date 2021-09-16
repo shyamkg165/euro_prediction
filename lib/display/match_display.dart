@@ -123,6 +123,20 @@ class MatchDisplay extends StatelessWidget {
                               secondImg: secondImg,
                               predictions: predictions)));
                 }
+                if (buttonName == 'SHOW RESULTS') {
+                  getPredictions(matchNum);
+                  sleep(Duration(milliseconds: 1000));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ShowPredictionsScreen(
+                              matchNum: matchNum,
+                              firstTeam: firstTeam,
+                              secondTeam: secondTeam,
+                              firstImg: firstImg,
+                              secondImg: secondImg,
+                              predictions: predictions)));
+                }
               }),
           Text('Cut off time ends in : $cutOffTime',
               style: TextStyle(
