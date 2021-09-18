@@ -43,13 +43,15 @@ class NumCorrectPrediction {
 
 List<PlayerMatchPoints> playerMatchPointsList = [];
 List<MatchPrediction> matchPredictionList = [];
+bool resultRead = false;
 
 List<PlayerMatchPoints> calculatePoints(int matchNum, String matchResult,
     String manOfMatch, String bestAttacker, String bestDefender) {
   readPredictions(
       matchNum, matchResult, manOfMatch, bestAttacker, bestDefender);
+  print('calling sleep');
   sleep(Duration(milliseconds: 1000));
-  writePlayerPoints(playerMatchPointsList);
+
   return playerMatchPointsList;
 }
 
@@ -76,10 +78,27 @@ void readPredictions(
   int playerAttackerPoints;
   int playerDefenderPoints;
 
+  print('calling readprediction');
   final readPrediction = await _firestore
       .collection('matchprediction')
       .where("matchnum", isEqualTo: actualMatchNumber)
       .get();
+
+  if (readPrediction.docs.isEmpty) {
+    print('readprediction is empty');
+  } else {
+    print('readprediction not empty');
+  }
+
+  int count = 0;
+  while (readPrediction.docs.isEmpty) {
+    sleep(Duration(milliseconds: 1000));
+    count++;
+    print('count' + count.toString());
+    if (count > 30) {
+      break;
+    }
+  }
 
   matchPredictionList.clear();
 
@@ -114,6 +133,7 @@ void readPredictions(
     );
     matchPredictionList.add(matchPrediction);
   }
+  resultRead = false;
   print('numOfCorrectResult =' + numOfCorrectResult.toString());
   print('numOfCorrectMom =' + numOfCorrectMom.toString());
   print('numOfCorrectAttacker =' + numOfCorrectAttacker.toString());
@@ -158,6 +178,8 @@ void readPredictions(
     print(playerMatchPoints.playerAttackerPoints);
     print(playerMatchPoints.playerDefenderPoints);
   }
+
+  writePlayerPoints(playerMatchPointsList);
 }
 
 void writePlayerPoints(List<PlayerMatchPoints> playerMatchPointsList) {
