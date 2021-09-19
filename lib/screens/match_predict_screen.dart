@@ -1,4 +1,5 @@
 import 'package:Euro_prediction/components/rounded_button.dart';
+import 'package:Euro_prediction/screens/predictions_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +7,7 @@ import 'package:Euro_prediction/display/current_match.dart';
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
-
+List<String> playerNameList = [];
 final matchResultTextController = TextEditingController();
 final manOfMatchTextController = TextEditingController();
 final bestAttackerTextController = TextEditingController();
@@ -42,8 +43,23 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
   @override
   void initState() {
     // TODO: implement initState
+    playerNameList.clear();
+    readPlayerNames(widget.firstTeam);
+    readPlayerNames(widget.secondTeam);
+
     super.initState();
     getCurrentUser();
+  }
+
+  void readPlayerNames(String teamName) async {
+    final readPlayers =
+        await _firestore.collection('Squads/euro2020/' + teamName).get();
+    for (var players in readPlayers.docs) {
+      print('adding Player' + players.data()['Player'].toString());
+      playerNameList.add(players.data()['Player']);
+    }
+
+    setState(() {});
   }
 
   void getCurrentUser() {
@@ -102,23 +118,26 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
                                   fontWeight: FontWeight.bold)),
                         ),
                         Expanded(
-                          child: TextField(
-                            controller: matchResultTextController,
-                            textAlign: TextAlign.center,
-                            onChanged: (value) {
-                              matchResult = value;
+                          child: DropdownButton<String>(
+                            dropdownColor: Colors.black,
+                            focusColor: Colors.redAccent,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600),
+                            value: matchResult,
+                            items: [widget.firstTeam, widget.secondTeam]
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String value) {
+                              setState(() {
+                                matchResult = value;
+                              });
                             },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              focusColor: Colors.red,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 20.0),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(32.0)),
-                              ),
-                            ),
                           ),
                         ),
                       ],
@@ -141,23 +160,26 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
                                   fontWeight: FontWeight.bold)),
                         ),
                         Expanded(
-                          child: TextField(
-                            controller: manOfMatchTextController,
-                            textAlign: TextAlign.center,
-                            onChanged: (value) {
-                              manOfMatch = value;
+                          child: DropdownButton<String>(
+                            dropdownColor: Colors.black,
+                            focusColor: Colors.redAccent,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600),
+                            value: manOfMatch,
+                            items: playerNameList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String value) {
+                              setState(() {
+                                manOfMatch = value;
+                              });
                             },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              focusColor: Colors.red,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 20.0),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(32.0)),
-                              ),
-                            ),
                           ),
                         ),
                       ],
@@ -180,23 +202,26 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
                                   fontWeight: FontWeight.bold)),
                         ),
                         Expanded(
-                          child: TextField(
-                            controller: bestAttackerTextController,
-                            textAlign: TextAlign.center,
-                            onChanged: (value) {
-                              bestAttacker = value;
+                          child: DropdownButton<String>(
+                            dropdownColor: Colors.black,
+                            focusColor: Colors.redAccent,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600),
+                            value: bestAttacker,
+                            items: playerNameList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String value) {
+                              setState(() {
+                                bestAttacker = value;
+                              });
                             },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              focusColor: Colors.red,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 20.0),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(32.0)),
-                              ),
-                            ),
                           ),
                         ),
                       ],
@@ -219,23 +244,26 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
                                   fontWeight: FontWeight.bold)),
                         ),
                         Expanded(
-                          child: TextField(
-                            controller: bestDefenderTextController,
-                            textAlign: TextAlign.center,
-                            onChanged: (value) {
-                              bestDefender = value;
+                          child: DropdownButton<String>(
+                            dropdownColor: Colors.black,
+                            focusColor: Colors.redAccent,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600),
+                            value: bestDefender,
+                            items: playerNameList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String value) {
+                              setState(() {
+                                bestDefender = value;
+                              });
                             },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              focusColor: Colors.red,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 20.0),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(32.0)),
-                              ),
-                            ),
                           ),
                         ),
                       ],
@@ -269,6 +297,10 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
                       'bestdefender': bestDefender,
                       'playerid': loggedInUser.email
                     });
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PredictionsPage()));
                   }),
             ),
           ],
