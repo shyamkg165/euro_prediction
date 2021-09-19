@@ -1,11 +1,14 @@
 import 'package:Euro_prediction/components/rounded_button.dart';
+import 'package:Euro_prediction/screens/completed_match_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Euro_prediction/display/current_match.dart';
 import 'package:Euro_prediction/functions/calculate_write_points.dart';
 
 List<PlayerMatchPoints> playerMatchPointsList = [];
-
+List<String> playerNameList = [];
+User loggedInUser;
 final _firestore = FirebaseFirestore.instance;
 
 final matchResultTextController = TextEditingController();
@@ -41,21 +44,22 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
 
   @override
   void initState() {
+    playerNameList.clear();
+    readPlayerNames(widget.firstTeam, false);
+    readPlayerNames(widget.secondTeam, true);
     super.initState();
-    //getCurrentUser();
   }
 
-  /*void getCurrentUser() {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        loggedInUser = user;
-        print(loggedInUser.email);
-      }
-    } catch (e) {
-      print(e);
+  void readPlayerNames(String teamName, bool callBuild) async {
+    final readPlayers =
+        await _firestore.collection('Squads/euro2020/' + teamName).get();
+    for (var players in readPlayers.docs) {
+      print('adding Player' + players.data()['Player'].toString());
+      playerNameList.add(players.data()['Player']);
     }
-  }*/
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,23 +105,26 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
                                   fontWeight: FontWeight.bold)),
                         ),
                         Expanded(
-                          child: TextField(
-                            controller: matchResultTextController,
-                            textAlign: TextAlign.center,
-                            onChanged: (value) {
-                              matchResult = value;
+                          child: DropdownButton<String>(
+                            dropdownColor: Colors.black,
+                            focusColor: Colors.redAccent,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600),
+                            value: matchResult,
+                            items: [widget.firstTeam, widget.secondTeam]
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String value) {
+                              setState(() {
+                                matchResult = value;
+                              });
                             },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              focusColor: Colors.red,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 20.0),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(32.0)),
-                              ),
-                            ),
                           ),
                         ),
                       ],
@@ -140,23 +147,26 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
                                   fontWeight: FontWeight.bold)),
                         ),
                         Expanded(
-                          child: TextField(
-                            controller: manOfMatchTextController,
-                            textAlign: TextAlign.center,
-                            onChanged: (value) {
-                              manOfMatch = value;
+                          child: DropdownButton<String>(
+                            dropdownColor: Colors.black,
+                            focusColor: Colors.redAccent,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600),
+                            value: manOfMatch,
+                            items: playerNameList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String value) {
+                              setState(() {
+                                manOfMatch = value;
+                              });
                             },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              focusColor: Colors.red,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 20.0),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(32.0)),
-                              ),
-                            ),
                           ),
                         ),
                       ],
@@ -179,23 +189,26 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
                                   fontWeight: FontWeight.bold)),
                         ),
                         Expanded(
-                          child: TextField(
-                            controller: bestAttackerTextController,
-                            textAlign: TextAlign.center,
-                            onChanged: (value) {
-                              bestAttacker = value;
+                          child: DropdownButton<String>(
+                            dropdownColor: Colors.black,
+                            focusColor: Colors.redAccent,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600),
+                            value: bestAttacker,
+                            items: playerNameList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String value) {
+                              setState(() {
+                                bestAttacker = value;
+                              });
                             },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              focusColor: Colors.red,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 20.0),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(32.0)),
-                              ),
-                            ),
                           ),
                         ),
                       ],
@@ -218,23 +231,26 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
                                   fontWeight: FontWeight.bold)),
                         ),
                         Expanded(
-                          child: TextField(
-                            controller: bestDefenderTextController,
-                            textAlign: TextAlign.center,
-                            onChanged: (value) {
-                              bestDefender = value;
+                          child: DropdownButton<String>(
+                            dropdownColor: Colors.black,
+                            focusColor: Colors.redAccent,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600),
+                            value: bestDefender,
+                            items: playerNameList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String value) {
+                              setState(() {
+                                bestDefender = value;
+                              });
                             },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              focusColor: Colors.red,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 20.0),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(32.0)),
-                              ),
-                            ),
                           ),
                         ),
                       ],
@@ -268,6 +284,10 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
                     });
                     playerMatchPointsList = calculatePoints(widget.matchNum,
                         matchResult, manOfMatch, bestAttacker, bestDefender);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CompletedMatchPage()));
                   }),
             ),
           ],
