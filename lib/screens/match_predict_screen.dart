@@ -289,14 +289,20 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
                     bestAttackerTextController.clear();
                     bestDefenderTextController.clear();
                     print(matchResult);
-                    _firestore.collection('matchprediction').add({
+                    _firestore
+                        .collection('matchprediction')
+                        .doc(loggedInUser.uid + widget.matchNum.toString())
+                        .set({
                       'matchnum': widget.matchNum,
                       'matchresult': matchResult,
                       'manofmatch': manOfMatch,
                       'bestattacker': bestAttacker,
                       'bestdefender': bestDefender,
                       'playerid': loggedInUser.email
+                    }, SetOptions(merge: true)).then((_) {
+                      print("Success!");
                     });
+                    print('data written to firestore');
                     Navigator.push(
                         context,
                         MaterialPageRoute(
