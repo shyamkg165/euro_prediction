@@ -59,6 +59,19 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
       playerNameList.add(players.data()['Player']);
     }
 
+    final currPrediction = _firestore
+        .collection('matchprediction')
+        .doc(loggedInUser.uid + widget.matchNum.toString());
+    await currPrediction.get().then<dynamic>((DocumentSnapshot snapshot) async {
+      setState(() {
+        if (snapshot.data() != null) {
+          matchResult = snapshot.get('matchresult');
+          manOfMatch = snapshot.get('manofmatch');
+          bestAttacker = snapshot.get('bestattacker');
+          bestDefender = snapshot.get('bestdefender');
+        }
+      });
+    });
     setState(() {});
   }
 
