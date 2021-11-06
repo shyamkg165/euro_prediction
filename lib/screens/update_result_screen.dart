@@ -275,12 +275,17 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
                     manOfMatchTextController.clear();
                     bestAttackerTextController.clear();
                     bestDefenderTextController.clear();
-                    _firestore.collection('matchresult').add({
+                    _firestore
+                        .collection('matchresult')
+                        .doc(widget.matchNum.toString())
+                        .set({
                       'matchnum': widget.matchNum,
                       'matchresult': matchResult,
                       'manofmatch': manOfMatch,
                       'bestattacker': bestAttacker,
                       'bestdefender': bestDefender
+                    }, SetOptions(merge: true)).then((_) {
+                      print("Success!");
                     });
                     playerMatchPointsList = calculatePoints(widget.matchNum,
                         matchResult, manOfMatch, bestAttacker, bestDefender);

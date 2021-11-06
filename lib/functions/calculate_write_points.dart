@@ -49,7 +49,6 @@ List<PlayerMatchPoints> calculatePoints(int matchNum, String matchResult,
     String manOfMatch, String bestAttacker, String bestDefender) {
   readPredictions(
       matchNum, matchResult, manOfMatch, bestAttacker, bestDefender);
-  print('calling sleep');
   sleep(Duration(milliseconds: 1000));
 
   return playerMatchPointsList;
@@ -78,23 +77,15 @@ void readPredictions(
   int playerAttackerPoints;
   int playerDefenderPoints;
 
-  print('calling readprediction');
   final readPrediction = await _firestore
       .collection('matchprediction')
       .where("matchnum", isEqualTo: actualMatchNumber)
       .get();
 
-  if (readPrediction.docs.isEmpty) {
-    print('readprediction is empty');
-  } else {
-    print('readprediction not empty');
-  }
-
   int count = 0;
   while (readPrediction.docs.isEmpty) {
     sleep(Duration(milliseconds: 1000));
     count++;
-    print('count' + count.toString());
     if (count > 30) {
       break;
     }
@@ -134,13 +125,9 @@ void readPredictions(
     matchPredictionList.add(matchPrediction);
   }
   resultRead = false;
-  print('numOfCorrectResult =' + numOfCorrectResult.toString());
-  print('numOfCorrectMom =' + numOfCorrectMom.toString());
-  print('numOfCorrectAttacker =' + numOfCorrectAttacker.toString());
-  print('numOfCorrectDefender =' + numOfCorrectDefender.toString());
+
   playerMatchPointsList.clear();
 
-  print('List length =' + matchPredictionList.length.toString());
   for (var num = 0; num < matchPredictionList.length; num++) {
     playerId = matchPredictionList[num].playerId;
 
@@ -171,26 +158,26 @@ void readPredictions(
         playerAttackerPoints: playerAttackerPoints,
         playerDefenderPoints: playerDefenderPoints);
     playerMatchPointsList.add(playerMatchPoints);
-
-    print(playerMatchPoints.playerID);
-    print(playerMatchPoints.playerResultPoints);
-    print(playerMatchPoints.playerMomPoints);
-    print(playerMatchPoints.playerAttackerPoints);
-    print(playerMatchPoints.playerDefenderPoints);
   }
 
-  writePlayerPoints(playerMatchPointsList);
+  writePlayerPoints(playerMatchPointsList, matchNum);
 }
 
-void writePlayerPoints(List<PlayerMatchPoints> playerMatchPointsList) {
-  print('Player List length =' + playerMatchPointsList.length.toString());
+void writePlayerPoints(
+    List<PlayerMatchPoints> playerMatchPointsList, int matchNum) {
   for (var num = 0; num < playerMatchPointsList.length; num++) {
-    _firestore.collection('matchpoints').add({
+    _firestore
+        .collection('matchpoints')
+        .doc(playerMatchPointsList[num].playerID + matchNum.toString())
+        .set({
       'playerId': playerMatchPointsList[num].playerID,
+      'matchnum': matchNum,
       'resultpoints': playerMatchPointsList[num].playerResultPoints,
       'mompoints': playerMatchPointsList[num].playerMomPoints,
       'attackerpoints': playerMatchPointsList[num].playerAttackerPoints,
       'defenderpoints': playerMatchPointsList[num].playerDefenderPoints
+    }, SetOptions(merge: true)).then((_) {
+      print("Success!");
     });
   }
 }
