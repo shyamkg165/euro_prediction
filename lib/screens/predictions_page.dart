@@ -34,7 +34,21 @@ class _PredictionsPageState extends State<PredictionsPage> {
       final String matchStatus = match.data()['matchstatus'];
 
       final String cutOffTime = readTimestamp(matchTime);
-      final String buttonName = getButtonName(cutOffTime, matchStatus);
+
+      String firstButtonName = 'PREDICT NOW';
+      String secondButtonName = 'NA';
+
+
+      if (cutOffTime != 'Time ended') {
+        firstButtonName = 'PREDICT NOW';
+        secondButtonName = 'NA';
+      } else if ((cutOffTime == 'Time ended') && (matchStatus != 'completed')) {
+        firstButtonName = 'SHOW PREDICTIONS';
+        secondButtonName = 'NA';
+      } else if ((cutOffTime == 'Time ended') && (matchStatus == 'completed')) {
+        firstButtonName = 'SHOW PREDICTIONS';
+        secondButtonName = 'SHOW RESULTS';
+      }
 
       final matchDisplay = MatchDisplay(
         matchNum: matchNum,
@@ -44,7 +58,8 @@ class _PredictionsPageState extends State<PredictionsPage> {
         secondImg: secondImg,
         matchStatus: matchStatus,
         cutOffTime: cutOffTime,
-        buttonName: buttonName,
+        firstButtonName: firstButtonName,
+        secondButtonName: secondButtonName,
       );
       matches.add(matchDisplay);
     }
@@ -76,7 +91,8 @@ class _PredictionsPageState extends State<PredictionsPage> {
                     firstImg: matches[index].firstImg,
                     secondImg: matches[index].secondImg,
                     cutOffTime: matches[index].cutOffTime,
-                    buttonName: matches[index].buttonName,
+                    firstButtonName: matches[index].firstButtonName,
+                    secondButtonName: matches[index].secondButtonName,
                   ),
                 );
               },
@@ -129,16 +145,4 @@ String readTimestamp(Timestamp t) {
     }
   }
   return time;
-}
-
-String getButtonName(String cutOffTime, String matchStatus) {
-  String buttonName = '';
-  if (cutOffTime != 'Time ended') {
-    buttonName = 'PREDICT NOW';
-  } else if ((cutOffTime == 'Time ended') && (matchStatus != 'completed')) {
-    buttonName = 'SHOW PREDICTIONS';
-  } else if ((cutOffTime == 'Time ended') && (matchStatus == 'completed')) {
-    buttonName = 'SHOW RESULTS';
-  }
-  return buttonName;
 }

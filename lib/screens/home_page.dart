@@ -75,7 +75,8 @@ class NextMatchDisplay extends StatelessWidget {
       firstImg: 'images/GER.webp',
       secondImg: 'images/POR.webp',
       cutOffTime: '4 hrs 52 mins',
-      buttonName: 'PREDICT NOW',
+      firstButtonName: 'PREDICT NOW',
+      secondButtonName: 'NA',
     );
   }
 }

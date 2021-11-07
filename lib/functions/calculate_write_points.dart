@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:Euro_prediction/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:Euro_prediction/constants.dart';
+
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -161,16 +162,23 @@ void readPredictions(
   }
 
   writePlayerPoints(playerMatchPointsList, matchNum);
+  //writeStandings(playerMatchPointsList);
+
 }
 
 void writePlayerPoints(
     List<PlayerMatchPoints> playerMatchPointsList, int matchNum) {
   for (var num = 0; num < playerMatchPointsList.length; num++) {
+    _firestore.collection('matchpoints').doc(playerMatchPointsList[num].playerID).set({
+      'playerId': playerMatchPointsList[num].playerID
+    }, SetOptions(merge: true));
+
     _firestore
         .collection('matchpoints')
-        .doc(playerMatchPointsList[num].playerID + matchNum.toString())
+        .doc(playerMatchPointsList[num].playerID)
+        .collection('Matches')
+        .doc(matchNum.toString())
         .set({
-      'playerId': playerMatchPointsList[num].playerID,
       'matchnum': matchNum,
       'resultpoints': playerMatchPointsList[num].playerResultPoints,
       'mompoints': playerMatchPointsList[num].playerMomPoints,

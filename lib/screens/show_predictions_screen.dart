@@ -1,14 +1,15 @@
-import 'package:Euro_prediction/display/match_display.dart';
 import 'package:flutter/material.dart';
-//import 'package:Euro_prediction/display/current_match.dart';
 import 'package:Euro_prediction/display/predictions_display.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+final _firestore = FirebaseFirestore.instance;
 int matchNum;
 String playerId;
 String matchResult;
 String manOfMatch;
 String bestAttacker;
 String bestDefender;
+List<PredictionsDisplay> predictionsList = [];
 
 class ShowPredictionsScreen extends StatefulWidget {
   ShowPredictionsScreen(
@@ -16,8 +17,7 @@ class ShowPredictionsScreen extends StatefulWidget {
       @required this.firstTeam,
       @required this.secondTeam,
       @required this.firstImg,
-      @required this.secondImg,
-      @required this.predictions});
+      @required this.secondImg});
 
   static const String id = 'show_predictions_screen';
   final int matchNum;
@@ -25,7 +25,7 @@ class ShowPredictionsScreen extends StatefulWidget {
   final String secondTeam;
   final String firstImg;
   final String secondImg;
-  final List<PredictionsDisplay> predictions;
+
   @override
   _ShowPredictionsScreenState createState() => _ShowPredictionsScreenState();
 }
@@ -33,16 +33,51 @@ class ShowPredictionsScreen extends StatefulWidget {
 class _ShowPredictionsScreenState extends State<ShowPredictionsScreen> {
   @override
   void initState() {
-    // TODO: implement initState
-
-    print('init state');
-    setState(() {});
+    getPredictions(widget.matchNum);
     super.initState();
   }
 
+  void getPredictions(int matchNumber) async {
+    final matchPrediction = await _firestore
+        .collection('matchprediction')
+        .where("matchnum", isEqualTo: matchNumber)
+        .get();
+
+    print ('in getPredictions');
+    print (matchNumber);
+    predictionsList.clear();
+    for (var match in matchPrediction.docs) {
+      matchNum = match.data()['matchnum'];
+      playerId = match.data()['playerid'];
+      matchResult = match.data()['matchresult'];
+      manOfMatch = match.data()['manofmatch'];
+      bestAttacker = match.data()['bestattacker'];
+      bestDefender = match.data()['bestdefender'];
+
+      print(matchNum);
+      print(playerId);
+      print(matchResult);
+      print(manOfMatch);
+      print(bestAttacker);
+      print(bestDefender);
+
+      final predictionDisplay = PredictionsDisplay(
+        playerId: playerId,
+        matchNum: matchNum.toString(),
+        matchResult: matchResult,
+        manOfMatch: manOfMatch,
+        bestAttacker: bestAttacker,
+        bestDefender: bestDefender,
+      );
+      predictionsList.add(predictionDisplay);
+    }
+    setState(() {
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    print('size = ' + predictions.length.toString());
+    print('size = ' + predictionsList.length.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text('EURO PREDICTION'),
@@ -88,7 +123,7 @@ class _ShowPredictionsScreenState extends State<ShowPredictionsScreen> {
                       ],
                     ),
                   ]),
-                  for (var prediction in widget.predictions)
+                  for (var prediction in predictionsList)
                     TableRow(
                       children: [
                         Column(
@@ -139,16 +174,3 @@ class _ShowPredictionsScreenState extends State<ShowPredictionsScreen> {
   }
 }
 
-/*Column(
-children: <Widget>[
-CurrentMatch(
-matchNum: widget.matchNum,
-firstTeam: widget.firstTeam,
-secondTeam: widget.secondTeam,
-firstImg: widget.firstImg,
-secondImg: widget.secondImg),
-Container(
-child: ListView(children: widget.predictions),
-        ],
-              ),
-),*/

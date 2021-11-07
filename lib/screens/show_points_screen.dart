@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:Euro_prediction/functions/calculate_write_points.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+final _firestore = FirebaseFirestore.instance;
 int matchNum;
 String playerId;
 String matchResult;
 String manOfMatch;
 String bestAttacker;
 String bestDefender;
+List<PlayerMatchPoints> playerMatchPointsList = [];
+
 
 class ShowPointsScreen extends StatefulWidget {
-  ShowPointsScreen({@required this.matchNum, @required this.playerMatchPoints});
+  ShowPointsScreen({@required this.matchNum});
 
   static const String id = 'show_points_screen';
   final int matchNum;
-  final List<PlayerMatchPoints> playerMatchPoints;
 
   @override
   _ShowPointsScreenState createState() => _ShowPointsScreenState();
@@ -24,8 +27,61 @@ class _ShowPointsScreenState extends State<ShowPointsScreen> {
   void initState() {
     // TODO: implement initState
 
-    setState(() {});
+    getPlayerMatchPoints(widget.matchNum);
     super.initState();
+  }
+
+  void getPlayerMatchPoints(int matchNumber) async {
+    int playerResultPoints;
+    int playerMomPoints;
+    int playerAttackerPoints;
+    int playerDefenderPoints;
+
+    print ('in getPlayerMatchPoints');
+
+    final playerNames = await _firestore
+        .collection('matchpoints')
+        .get();
+
+    playerMatchPointsList.clear();
+    for (var player in playerNames.docs) {
+
+      playerId = player.id;
+
+      final currentMatch = await _firestore
+          .collection('matchpoints')
+          .doc(player.id)
+          .collection('Matches')
+          .where("matchnum", isEqualTo: matchNumber)
+          .get();
+
+      for (var match in currentMatch.docs){
+        matchNum = match.data()['matchnum'];
+        playerResultPoints = match.data()['resultpoints'];
+        playerMomPoints = match.data()['mompoints'];
+        playerAttackerPoints = match.data()['attackerpoints'];
+        playerDefenderPoints = match.data()['defenderpoints'];
+      }
+
+      print(playerId);
+      print(matchNum);
+      print(playerResultPoints);
+      print(playerMomPoints);
+      print(playerAttackerPoints);
+      print(playerDefenderPoints);
+
+      final playerMatchPoints = PlayerMatchPoints(
+          playerID: playerId,
+          playerResultPoints: playerResultPoints,
+          playerMomPoints: playerMomPoints,
+          playerAttackerPoints: playerAttackerPoints,
+          playerDefenderPoints: playerDefenderPoints);
+
+      playerMatchPointsList.add(playerMatchPoints);
+    }
+    setState(() {
+
+    });
   }
 
   @override
@@ -79,8 +135,7 @@ class _ShowPointsScreenState extends State<ShowPointsScreen> {
                       ],
                     ),
                   ]),
-                  for (var playerMatchPoints in widget.playerMatchPoints)
-
+                  for (var playerMatchPoints in playerMatchPointsList)
                       TableRow(
                         children: [
                           Column(
@@ -126,8 +181,7 @@ class _ShowPointsScreenState extends State<ShowPointsScreen> {
                             ],
                           ),
                         ],
-                      ),
-
+                      )
                 ],
               ),
             )
@@ -137,3 +191,4 @@ class _ShowPointsScreenState extends State<ShowPointsScreen> {
     );
   }
 }
+
