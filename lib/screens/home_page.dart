@@ -1,11 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:Euro_prediction/display/match_display.dart';
+import 'package:Euro_prediction/screens/predictions_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class HomePage extends StatelessWidget {
+final _firestore = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;
+User loggedInUser;
+int rank = 0;
+int points = 0;
+
+int matchNum;
+String firstTeam;
+String secondTeam;
+String firstImg;
+String secondImg;
+String cutOffTime;
+String firstButtonName;
+String secondButtonName;
+
+class HomePage extends StatefulWidget {
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  @override
+  void initState() {
+
+    getCurrentUser();
+    getRankPoints();
+    updateNextMatch();
+    super.initState();
+  }
+  void getCurrentUser() {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        loggedInUser = user;
+        print("From Home Page "+loggedInUser.email);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void getRankPoints() async{
+    final standings = await _firestore
+        .collection('standings')
+        .doc(loggedInUser.email).get();
+    if (standings.exists){
+      rank = standings.data()['rank'];
+      points = standings.data()['sumOfAllPoints'];
+    }
+    else
+      {
+        rank = 0;
+        points = 0;
+      }
+    print("getRank $rank $points");
+    setState(() {
+
+    });
+
+  }
+
+  void updateNextMatch() async {
+    print('in update next match \n');
+    final nextmatch = await _firestore.collection('matchschedule').get();
+
+    for (var match in nextmatch.docs) {
+      print("Match Doc ID "+ match.id);
+      final String matchStatus = match.data()['matchstatus'];
+
+      if(matchStatus == 'scheduled'){
+
+        matchNum = match.data()['matchnum'];
+        firstTeam = match.data()['firstteam'];
+        secondTeam = match.data()['secondteam'];
+        firstImg = match.data()['firstimg'];
+        secondImg = match.data()['secondimg'];
+        Timestamp matchTime = match.data()['matchtime'];
+
+
+        cutOffTime = readTimestamp(matchTime);
+
+        firstButtonName = 'PREDICT NOW';
+        secondButtonName = 'NA';
+
+        break;
+
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    //double width = MediaQuery.of(context).size.width;
-    //double height = MediaQuery.of(context).size.height;
     return Container(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -14,10 +107,10 @@ class HomePage extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: HomeDisplay(display: 'RANK \n#', num: 3),
+                  child: HomeDisplay(display: 'RANK \n#', num: rank),
                 ),
                 Expanded(
-                  child: HomeDisplay(display: 'POINTS \n', num: 366),
+                  child: HomeDisplay(display: 'POINTS \n', num: points),
                 ),
               ],
             ),
@@ -26,7 +119,14 @@ class HomePage extends StatelessWidget {
             fit: FlexFit.tight,
             child: Container(
               child: FittedBox(
-                child: NextMatchDisplay(),
+                child: NextMatchDisplay(matchNum: matchNum,
+                  firstTeam: firstTeam,
+                  secondTeam: secondTeam,
+                  firstImg: firstImg,
+                  secondImg: secondImg,
+                  cutOffTime: cutOffTime,
+                  firstButtonName: firstButtonName,
+                  secondButtonName: secondButtonName,),
               ),
             ),
           ),
@@ -66,17 +166,37 @@ class HomeDisplay extends StatelessWidget {
 }
 
 class NextMatchDisplay extends StatelessWidget {
+
+  NextMatchDisplay(
+      {@required this.matchNum,
+        @required this.firstTeam,
+        @required this.secondTeam,
+        @required this.firstImg,
+        @required this.secondImg,
+        @required this.cutOffTime,
+        @required this.firstButtonName,
+        this.secondButtonName});
+
+  final int matchNum;
+  final String firstTeam;
+  final String secondTeam;
+  final String firstImg;
+  final String secondImg;
+  final String cutOffTime;
+  final String firstButtonName;
+  final String secondButtonName;
+
   @override
   Widget build(BuildContext context) {
     return MatchDisplay(
-      matchNum: 0,
-      firstTeam: 'GERMANY',
-      secondTeam: 'PORTUGAL',
-      firstImg: 'images/GER.webp',
-      secondImg: 'images/POR.webp',
-      cutOffTime: '4 hrs 52 mins',
-      firstButtonName: 'PREDICT NOW',
-      secondButtonName: 'NA',
+      matchNum: matchNum,
+      firstTeam: firstTeam,
+      secondTeam: secondTeam,
+      firstImg: firstImg,
+      secondImg: secondImg,
+      cutOffTime: cutOffTime,
+      firstButtonName: firstButtonName,
+      secondButtonName: secondButtonName,
     );
   }
 }

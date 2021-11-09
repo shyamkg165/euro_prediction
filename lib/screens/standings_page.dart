@@ -85,9 +85,30 @@ class _StandingsPageState extends State<StandingsPage> {
       totalPointsList.add(totalPoints);
     }
 
-    setState(() {});
+    setState(() {
+      sortStandings();
+    });
   }
 
+  void sortStandings(){
+    totalPointsList.sort((a,b) => b.sumOfAllPoints.compareTo(a.sumOfAllPoints));
+    int rank =0;
+    for (var playerTotalPoints in totalPointsList){
+
+      rank++;
+
+      _firestore
+          .collection('standings')
+          .doc(playerTotalPoints.playerID)
+          .set({
+        'sumOfAllPoints': playerTotalPoints.sumOfAllPoints,
+        'rank': rank
+      }, SetOptions(merge: true)).then((_) {
+        print("Standings Success!");
+      });
+
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
