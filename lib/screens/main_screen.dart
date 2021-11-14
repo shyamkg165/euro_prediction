@@ -97,11 +97,13 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('EURO PREDICTION',
-        style: TextStyle(
-        color: Colors.white,
-        fontSize: 50.0,
-        fontWeight: FontWeight.w600)),
+        title: FittedBox(
+          child: Text('EURO PREDICTION',
+              style: TextStyle(
+                  color: Colors.white,
+                  //fontSize: 10.0,
+                  fontWeight: FontWeight.w600)),
+        ),
         backgroundColor: Colors.blue[900],
       ),
       backgroundColor: Colors.white,
