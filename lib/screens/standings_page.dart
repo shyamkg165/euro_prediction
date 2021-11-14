@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:Euro_prediction/display/scrollable_widget.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -27,6 +28,10 @@ class StandingsPage extends StatefulWidget {
 }
 
 class _StandingsPageState extends State<StandingsPage> {
+
+  int sortColumnIndex;
+  bool isAscending = false;
+
   @override
   void initState() {
     calculateStandings();
@@ -109,7 +114,86 @@ class _StandingsPageState extends State<StandingsPage> {
 
     }
   }
+
   @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ScrollableWidget(child: buildDataTable()),
+    );
+  }
+
+  Widget buildDataTable() {
+    final columns = [
+      'Player',
+      'Result Points',
+      'MOM Points',
+      'Attacker points',
+      'Defender points',
+      'Total Points'
+    ];
+
+    return DataTable(
+      sortAscending: isAscending,
+      sortColumnIndex: sortColumnIndex,
+      columns: getColumns(columns),
+      rows: getRows(totalPointsList),
+    );
+  }
+
+  List<DataColumn> getColumns(List<String> columns) => columns
+      .map((String column) => DataColumn(
+    label: Text(column),
+    onSort: onSort,
+  ))
+      .toList();
+
+  List<DataRow> getRows(List<TotalPoints> totalPointsList) =>
+      totalPointsList.map((TotalPoints playerTotalPoints) {
+        final cells = [
+          playerTotalPoints.playerID,
+          playerTotalPoints.totalResultPoints,
+          playerTotalPoints.totalMomPoints,
+          playerTotalPoints.totalAttackerPoints,
+          playerTotalPoints.totalDefenderPoints,
+          playerTotalPoints.sumOfAllPoints
+        ];
+
+        return DataRow(cells: getCells(cells));
+      }).toList();
+
+  List<DataCell> getCells(List<dynamic> cells) =>
+      cells.map((data) => DataCell(Text('$data'))).toList();
+
+  void onSort(int columnIndex, bool ascending) {
+    if (columnIndex == 0) {
+      totalPointsList.sort((user1, user2) =>
+          compareInt(ascending, user1.sumOfAllPoints, user2.sumOfAllPoints));
+    } else if (columnIndex == 1) {
+      totalPointsList.sort((user1, user2) => compareInt(
+          ascending, user1.totalResultPoints, user2.totalResultPoints));
+    } else if (columnIndex == 2) {
+      totalPointsList.sort((user1, user2) =>
+          compareInt(ascending, user1.totalMomPoints, user2.totalMomPoints));
+    } else if (columnIndex == 3) {
+      totalPointsList.sort((user1, user2) => compareInt(
+          ascending, user1.totalAttackerPoints, user2.totalAttackerPoints));
+    } else if (columnIndex == 4) {
+      totalPointsList.sort((user1, user2) => compareInt(
+          ascending, user1.totalDefenderPoints, user2.totalDefenderPoints));
+    } else if (columnIndex == 5) {
+      totalPointsList.sort((user1, user2) =>
+          compareInt(ascending, user1.sumOfAllPoints, user2.sumOfAllPoints));
+    }
+    setState(() {
+      this.sortColumnIndex = columnIndex;
+      this.isAscending = ascending;
+    });
+  }
+
+  int compareInt(bool ascending, int value1, int value2) =>
+      ascending ? value1.compareTo(value2) : value2.compareTo(value1);
+
+  /*@override
   Widget build(BuildContext context) {
     return Container(
       //child: ListView(children: widget.predictions),
@@ -199,5 +283,5 @@ class _StandingsPageState extends State<StandingsPage> {
         ],
       ),
     );
-  }
+  }*/
 }

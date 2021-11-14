@@ -153,7 +153,7 @@ class HomeDisplay extends StatelessWidget {
           child: Text(
             '$display$num',
             style: TextStyle(
-              color: Colors.redAccent,
+              color: Colors.white,
               fontSize: 100.0,
               fontWeight: FontWeight.w600,
             ),

@@ -97,16 +97,22 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('EURO PREDICTION'),
+        title: Text('EURO PREDICTION',
+        style: TextStyle(
+        color: Colors.white,
+        fontSize: 50.0,
+        fontWeight: FontWeight.w600)),
         backgroundColor: Colors.blue[900],
       ),
-      backgroundColor: Colors.lightBlueAccent,
+      backgroundColor: Colors.white,
       body: mainScreenChildren[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: bottomNavigationList,
         iconSize: 40.0,
-        selectedItemColor: Colors.blueGrey[500],
-        unselectedItemColor: Colors.blueGrey[500],
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.blue[900],
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey[500],
         currentIndex: selectedIndex,
         onTap: onItemTapped,
       ),
