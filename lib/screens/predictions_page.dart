@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Euro_prediction/display/match_display.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:Euro_prediction/constants.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -38,7 +39,6 @@ class _PredictionsPageState extends State<PredictionsPage> {
       String firstButtonName = 'PREDICT NOW';
       String secondButtonName = 'NA';
 
-
       if (cutOffTime != 'Time ended') {
         firstButtonName = 'PREDICT NOW';
         secondButtonName = 'NA';
@@ -71,6 +71,12 @@ class _PredictionsPageState extends State<PredictionsPage> {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(logoPath),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           children: <Widget>[
             ListView.builder(

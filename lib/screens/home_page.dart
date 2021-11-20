@@ -3,6 +3,7 @@ import 'package:Euro_prediction/display/match_display.dart';
 import 'package:Euro_prediction/screens/predictions_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Euro_prediction/constants.dart';
 
 final _firestore = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
@@ -20,51 +21,43 @@ String firstButtonName;
 String secondButtonName;
 
 class HomePage extends StatefulWidget {
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   void initState() {
-
     getCurrentUser();
     getRankPoints();
     updateNextMatch();
     super.initState();
   }
+
   void getCurrentUser() {
     try {
       final user = _auth.currentUser;
       if (user != null) {
         loggedInUser = user;
-        print("From Home Page "+loggedInUser.email);
+        print("From Home Page " + loggedInUser.email);
       }
     } catch (e) {
       print(e);
     }
   }
 
-  void getRankPoints() async{
-    final standings = await _firestore
-        .collection('standings')
-        .doc(loggedInUser.email).get();
-    if (standings.exists){
+  void getRankPoints() async {
+    final standings =
+        await _firestore.collection('standings').doc(loggedInUser.email).get();
+    if (standings.exists) {
       rank = standings.data()['rank'];
       points = standings.data()['sumOfAllPoints'];
+    } else {
+      rank = 0;
+      points = 0;
     }
-    else
-      {
-        rank = 0;
-        points = 0;
-      }
     print("getRank $rank $points");
-    setState(() {
-
-    });
-
+    setState(() {});
   }
 
   void updateNextMatch() async {
@@ -72,11 +65,10 @@ class _HomePageState extends State<HomePage> {
     final nextmatch = await _firestore.collection('matchschedule').get();
 
     for (var match in nextmatch.docs) {
-      print("Match Doc ID "+ match.id);
+      print("Match Doc ID " + match.id);
       final String matchStatus = match.data()['matchstatus'];
 
-      if(matchStatus == 'scheduled'){
-
+      if (matchStatus == 'scheduled') {
         matchNum = match.data()['matchnum'];
         firstTeam = match.data()['firstteam'];
         secondTeam = match.data()['secondteam'];
@@ -84,14 +76,12 @@ class _HomePageState extends State<HomePage> {
         secondImg = match.data()['secondimg'];
         Timestamp matchTime = match.data()['matchtime'];
 
-
         cutOffTime = readTimestamp(matchTime);
 
         firstButtonName = 'PREDICT NOW';
         secondButtonName = 'NA';
 
         break;
-
       }
     }
     setState(() {});
@@ -100,6 +90,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(logoPath),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -119,14 +115,16 @@ class _HomePageState extends State<HomePage> {
             fit: FlexFit.tight,
             child: Container(
               child: FittedBox(
-                child: NextMatchDisplay(matchNum: matchNum,
+                child: NextMatchDisplay(
+                  matchNum: matchNum,
                   firstTeam: firstTeam,
                   secondTeam: secondTeam,
                   firstImg: firstImg,
                   secondImg: secondImg,
                   cutOffTime: cutOffTime,
                   firstButtonName: firstButtonName,
-                  secondButtonName: secondButtonName,),
+                  secondButtonName: secondButtonName,
+                ),
               ),
             ),
           ),
@@ -166,16 +164,15 @@ class HomeDisplay extends StatelessWidget {
 }
 
 class NextMatchDisplay extends StatelessWidget {
-
   NextMatchDisplay(
       {@required this.matchNum,
-        @required this.firstTeam,
-        @required this.secondTeam,
-        @required this.firstImg,
-        @required this.secondImg,
-        @required this.cutOffTime,
-        @required this.firstButtonName,
-        this.secondButtonName});
+      @required this.firstTeam,
+      @required this.secondTeam,
+      @required this.firstImg,
+      @required this.secondImg,
+      @required this.cutOffTime,
+      @required this.firstButtonName,
+      this.secondButtonName});
 
   final int matchNum;
   final String firstTeam;

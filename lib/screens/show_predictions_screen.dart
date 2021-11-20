@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Euro_prediction/display/predictions_display.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:Euro_prediction/constants.dart';
 
 final _firestore = FirebaseFirestore.instance;
 int matchNum;
@@ -43,8 +44,8 @@ class _ShowPredictionsScreenState extends State<ShowPredictionsScreen> {
         .where("matchnum", isEqualTo: matchNumber)
         .get();
 
-    print ('in getPredictions');
-    print (matchNumber);
+    print('in getPredictions');
+    print(matchNumber);
     predictionsList.clear();
     for (var match in matchPrediction.docs) {
       matchNum = match.data()['matchnum'];
@@ -71,10 +72,9 @@ class _ShowPredictionsScreenState extends State<ShowPredictionsScreen> {
       );
       predictionsList.add(predictionDisplay);
     }
-    setState(() {
-
-    });
+    setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     print('size = ' + predictionsList.length.toString());
@@ -86,6 +86,12 @@ class _ShowPredictionsScreenState extends State<ShowPredictionsScreen> {
       backgroundColor: Colors.lightBlueAccent,
       body: Container(
         //child: ListView(children: widget.predictions),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(logoPath),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           children: <Widget>[
             Container(
@@ -173,4 +179,3 @@ class _ShowPredictionsScreenState extends State<ShowPredictionsScreen> {
     );
   }
 }
-

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Euro_prediction/display/current_match.dart';
+import 'package:Euro_prediction/constants.dart';
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
@@ -96,233 +97,246 @@ class _MatchPredictScreenState extends State<MatchPredictScreen> {
       ),
       backgroundColor: Colors.lightBlueAccent,
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Flexible(
-              fit: FlexFit.loose,
-              child: FittedBox(
-                child: CurrentMatch(
-                    matchNum: widget.matchNum,
-                    firstTeam: widget.firstTeam,
-                    secondTeam: widget.secondTeam,
-                    firstImg: widget.firstImg,
-                    secondImg: widget.secondImg),
-              ),
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(logoPath),
+              fit: BoxFit.contain,
             ),
-            Flexible(
-              fit: FlexFit.loose,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF1D1E33),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text('Match Result',
-                              style: TextStyle(
-                                  fontFamily: 'SourceSansPro',
-                                  fontSize: 40.0,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                        Expanded(
-                          child: DropdownButton<String>(
-                            dropdownColor: Colors.black,
-                            focusColor: Colors.redAccent,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w600),
-                            value: matchResult,
-                            items: [widget.firstTeam, widget.secondTeam]
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String value) {
-                              setState(() {
-                                matchResult = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF1D1E33),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text('Man of the Match',
-                              style: TextStyle(
-                                  fontFamily: 'SourceSansPro',
-                                  fontSize: 40.0,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                        Expanded(
-                          child: DropdownButton<String>(
-                            dropdownColor: Colors.black,
-                            focusColor: Colors.redAccent,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w600),
-                            value: manOfMatch,
-                            items: playerNameList
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String value) {
-                              setState(() {
-                                manOfMatch = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF1D1E33),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text('Best Attacker',
-                              style: TextStyle(
-                                  fontFamily: 'SourceSansPro',
-                                  fontSize: 40.0,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                        Expanded(
-                          child: DropdownButton<String>(
-                            dropdownColor: Colors.black,
-                            focusColor: Colors.redAccent,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w600),
-                            value: bestAttacker,
-                            items: playerNameList
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String value) {
-                              setState(() {
-                                bestAttacker = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF1D1E33),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text('Best Defender',
-                              style: TextStyle(
-                                  fontFamily: 'SourceSansPro',
-                                  fontSize: 40.0,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                        Expanded(
-                          child: DropdownButton<String>(
-                            dropdownColor: Colors.black,
-                            focusColor: Colors.redAccent,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w600),
-                            value: bestDefender,
-                            items: playerNameList
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String value) {
-                              setState(() {
-                                bestDefender = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Flexible(
+                fit: FlexFit.loose,
+                child: FittedBox(
+                  child: CurrentMatch(
+                      matchNum: widget.matchNum,
+                      firstTeam: widget.firstTeam,
+                      secondTeam: widget.secondTeam,
+                      firstImg: widget.firstImg,
+                      secondImg: widget.secondImg),
+                ),
               ),
-            ),
-            Container(
-              width: 900.0,
-              height: 100.0,
-              margin: EdgeInsets.all(15.0),
-              decoration: BoxDecoration(
-                color: Color(0xFF1D1E33),
-                borderRadius: BorderRadius.circular(10.0),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF1D1E33),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text('Match Result',
+                                style: TextStyle(
+                                    fontFamily: 'SourceSansPro',
+                                    fontSize: 25.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          Expanded(
+                            child: DropdownButton<String>(
+                              dropdownColor: Colors.black,
+                              focusColor: Colors.redAccent,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600),
+                              value: matchResult,
+                              items: [
+                                widget.firstTeam,
+                                widget.secondTeam
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String value) {
+                                setState(() {
+                                  matchResult = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF1D1E33),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text('Man of the Match',
+                                style: TextStyle(
+                                    fontFamily: 'SourceSansPro',
+                                    fontSize: 25.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          Expanded(
+                            child: DropdownButton<String>(
+                              dropdownColor: Colors.black,
+                              focusColor: Colors.redAccent,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600),
+                              value: manOfMatch,
+                              items: playerNameList
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String value) {
+                                setState(() {
+                                  manOfMatch = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF1D1E33),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text('Best Attacker',
+                                style: TextStyle(
+                                    fontFamily: 'SourceSansPro',
+                                    fontSize: 25.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          Expanded(
+                            child: DropdownButton<String>(
+                              dropdownColor: Colors.black,
+                              focusColor: Colors.redAccent,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600),
+                              value: bestAttacker,
+                              items: playerNameList
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String value) {
+                                setState(() {
+                                  bestAttacker = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF1D1E33),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text('Best Defender',
+                                style: TextStyle(
+                                    fontFamily: 'SourceSansPro',
+                                    fontSize: 25.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          Expanded(
+                            child: DropdownButton<String>(
+                              dropdownColor: Colors.black,
+                              focusColor: Colors.redAccent,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600),
+                              value: bestDefender,
+                              items: playerNameList
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String value) {
+                                setState(() {
+                                  bestDefender = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              child: SubmitButton(
-                  title: 'SUBMIT',
-                  colour: Colors.blue[900],
-                  onPressed: () {
-                    matchResultTextController.clear();
-                    manOfMatchTextController.clear();
-                    bestAttackerTextController.clear();
-                    bestDefenderTextController.clear();
-                    print(matchResult);
-                    _firestore
-                        .collection('matchprediction')
-                        .doc(loggedInUser.uid + widget.matchNum.toString())
-                        .set({
-                      'matchnum': widget.matchNum,
-                      'matchresult': matchResult,
-                      'manofmatch': manOfMatch,
-                      'bestattacker': bestAttacker,
-                      'bestdefender': bestDefender,
-                      'playerid': loggedInUser.email
-                    }, SetOptions(merge: true)).then((_) {
-                      print("Success!");
-                    });
-                    print('data written to firestore');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PredictionsPage()));
-                  }),
-            ),
-          ],
+              Container(
+                width: 900.0,
+                height: 100.0,
+                margin: EdgeInsets.all(15.0),
+                decoration: BoxDecoration(
+                  color: Color(0xFF1D1E33),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: SubmitButton(
+                    title: 'SUBMIT',
+                    colour: Colors.blue[900],
+                    onPressed: () {
+                      matchResultTextController.clear();
+                      manOfMatchTextController.clear();
+                      bestAttackerTextController.clear();
+                      bestDefenderTextController.clear();
+                      print(matchResult);
+                      _firestore
+                          .collection('matchprediction')
+                          .doc(loggedInUser.uid + widget.matchNum.toString())
+                          .set({
+                        'matchnum': widget.matchNum,
+                        'matchresult': matchResult,
+                        'manofmatch': manOfMatch,
+                        'bestattacker': bestAttacker,
+                        'bestdefender': bestDefender,
+                        'playerid': loggedInUser.email
+                      }, SetOptions(merge: true)).then((_) {
+                        print("Success!");
+                      });
+                      print('data written to firestore');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PredictionsPage()));
+                    }),
+              ),
+            ],
+          ),
         ),
       ),
     );

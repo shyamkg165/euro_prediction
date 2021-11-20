@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Euro_prediction/components/rounded_button.dart';
 import 'package:Euro_prediction/constants.dart';
 import 'package:Euro_prediction/screens/main_screen.dart';
+import 'package:Euro_prediction/functions/auth_ack.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -42,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   tag: 'logo',
                   child: Container(
                     height: 200.0,
-                    child: Image.asset('images/UEFA_Euro_2020_Logo.webp'),
+                    child: Image.asset(logoPath),
                   ),
                 ),
                 SizedBox(
@@ -92,7 +93,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         });
                       } catch (e) {
                         print('error caught');
-                        _ackAlert(context);
+                        ackAlert(context, e.code().toString(), true);
+                        //test();
                         //print(e);
                       }
                     }),
@@ -105,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future _ackAlert(BuildContext context) {
+  /*Future _ackAlert(BuildContext context) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -123,5 +125,5 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
     );
-  }
+  }*/
 }

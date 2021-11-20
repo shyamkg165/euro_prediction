@@ -1,9 +1,9 @@
-import 'package:Euro_prediction/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:Euro_prediction/constants.dart';
 import 'package:Euro_prediction/components/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:Euro_prediction/functions/auth_ack.dart';
+import 'login_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
@@ -17,82 +17,99 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool showSpinner = false;
   String email;
   String password;
+  String displayName;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: ModalProgressHUD(
-          inAsyncCall: showSpinner,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Hero(
-                  tag: 'logo',
-                  child: Container(
-                    height: 200.0,
-                    child: Image.asset('images/UEFA_Euro_2020_Logo.webp'),
-                  ),
+        //child: ModalProgressHUD(
+        //  inAsyncCall: showSpinner,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Hero(
+                tag: 'logo',
+                child: Container(
+                  height: 200.0,
+                  child: Image.asset(logoPath),
                 ),
-                SizedBox(
-                  height: 48.0,
-                ),
-                TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  textAlign: TextAlign.center,
-                  onChanged: (value) {
-                    email = value;
-                    //Do something with the user input.
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                      hintText: 'Enter your Email'),
-                ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.center,
-                  onChanged: (value) {
-                    password = value;
-                    //Do something with the user input.
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                      hintText: 'Enter your password'),
-                ),
-                SizedBox(
-                  height: 24.0,
-                ),
-                RoundedButton(
-                    title: 'Register',
-                    colour: Colors.blueAccent,
-                    onPressed: () async {
-                      setState(() {
-                        showSpinner = true;
-                      });
-                      try {
-                        final newUser =
-                            await _auth.createUserWithEmailAndPassword(
-                                email: email, password: password);
-                        if (newUser != null) {
-                          Navigator.pushNamed(context, MainScreen.id);
-                        }
-                        setState(() {
-                          showSpinner = false;
-                        });
-                      } catch (e) {
-                        print(e);
+              ),
+              SizedBox(
+                height: 48.0,
+              ),
+              TextField(
+                keyboardType: TextInputType.emailAddress,
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  email = value;
+                  //Do something with the user input.
+                },
+                decoration:
+                    kTextFieldDecoration.copyWith(hintText: 'Enter your Email'),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              TextField(
+                keyboardType: TextInputType.name,
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  displayName = value;
+                  //Do something with the user input.
+                },
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Enter your Display Name'),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              TextField(
+                obscureText: true,
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  password = value;
+                  //Do something with the user input.
+                },
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Enter your password'),
+              ),
+              SizedBox(
+                height: 24.0,
+              ),
+              RoundedButton(
+                  title: 'Register',
+                  colour: Colors.blueAccent,
+                  onPressed: () async {
+                    setState(() {
+                      showSpinner = true;
+                    });
+                    try {
+                      final newUser =
+                          await _auth.createUserWithEmailAndPassword(
+                              email: email, password: password);
+                      if (newUser != null) {
+                        await newUser.user.updateDisplayName(displayName);
+
+                        Navigator.pushNamed(context, LoginScreen.id);
                       }
-                    }),
-              ],
-            ),
+                      setState(() {
+                        showSpinner = false;
+                      });
+                    } catch (e) {
+                      print("Error is " + e.code.toString());
+                      ackAlert(context, e.code.toString(), false);
+                    }
+                  }),
+            ],
           ),
         ),
       ),
+      //),
     );
   }
 }

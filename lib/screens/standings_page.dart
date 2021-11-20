@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Euro_prediction/display/scrollable_widget.dart';
+import 'package:Euro_prediction/constants.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -28,7 +29,6 @@ class StandingsPage extends StatefulWidget {
 }
 
 class _StandingsPageState extends State<StandingsPage> {
-
   int sortColumnIndex;
   bool isAscending = false;
 
@@ -49,7 +49,6 @@ class _StandingsPageState extends State<StandingsPage> {
     totalPointsList.clear();
     final playerNames = await _firestore.collection('matchpoints').get();
     for (var player in playerNames.docs) {
-
       playerID = player.id;
 
       totalResultPoints = 0;
@@ -64,12 +63,10 @@ class _StandingsPageState extends State<StandingsPage> {
           .get();
 
       for (var match in matches.docs) {
-
         totalResultPoints += match.data()["resultpoints"];
         totalMomPoints += match.data()["mompoints"];
         totalAttackerPoints += match.data()["attackerpoints"];
         totalDefenderPoints += match.data()["defenderpoints"];
-
       }
       print(totalResultPoints);
       print(totalMomPoints);
@@ -95,30 +92,33 @@ class _StandingsPageState extends State<StandingsPage> {
     });
   }
 
-  void sortStandings(){
-    totalPointsList.sort((a,b) => b.sumOfAllPoints.compareTo(a.sumOfAllPoints));
-    int rank =0;
-    for (var playerTotalPoints in totalPointsList){
-
+  void sortStandings() {
+    totalPointsList
+        .sort((a, b) => b.sumOfAllPoints.compareTo(a.sumOfAllPoints));
+    int rank = 0;
+    for (var playerTotalPoints in totalPointsList) {
       rank++;
 
-      _firestore
-          .collection('standings')
-          .doc(playerTotalPoints.playerID)
-          .set({
-        'sumOfAllPoints': playerTotalPoints.sumOfAllPoints,
-        'rank': rank
-      }, SetOptions(merge: true)).then((_) {
+      _firestore.collection('standings').doc(playerTotalPoints.playerID).set(
+          {'sumOfAllPoints': playerTotalPoints.sumOfAllPoints, 'rank': rank},
+          SetOptions(merge: true)).then((_) {
         print("Standings Success!");
       });
-
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ScrollableWidget(child: buildDataTable()),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(logoPath),
+            fit: BoxFit.contain,
+          ),
+        ),
+        child: ScrollableWidget(child: buildDataTable()),
+      ),
     );
   }
 
@@ -142,9 +142,9 @@ class _StandingsPageState extends State<StandingsPage> {
 
   List<DataColumn> getColumns(List<String> columns) => columns
       .map((String column) => DataColumn(
-    label: Text(column),
-    onSort: onSort,
-  ))
+            label: Text(column),
+            onSort: onSort,
+          ))
       .toList();
 
   List<DataRow> getRows(List<TotalPoints> totalPointsList) =>

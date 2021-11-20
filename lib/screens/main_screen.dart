@@ -98,11 +98,12 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: FittedBox(
-          child: Text('EURO PREDICTION',
-              style: TextStyle(
-                  color: Colors.white,
-                  //fontSize: 10.0,
-                  fontWeight: FontWeight.w600)),
+          child:
+              Text('EURO PREDICTION  -  ' + loggedInUser.displayName.toString(),
+                  style: TextStyle(
+                      color: Colors.white,
+                      //fontSize: 10.0,
+                      fontWeight: FontWeight.w600)),
         ),
         backgroundColor: Colors.blue[900],
       ),

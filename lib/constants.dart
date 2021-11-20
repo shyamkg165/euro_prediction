@@ -20,3 +20,4 @@ const int kResultPoints = 500;
 const int kMOMPoints = 500;
 const int kAttackerPoints = 250;
 const int kDefenderPoints = 250;
+const String logoPath = "images/UEFA_Euro_2020_Logo.webp";

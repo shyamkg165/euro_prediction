@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Euro_prediction/constants.dart';
 
-
 final _firestore = FirebaseFirestore.instance;
 
 class PlayerMatchPoints {
@@ -11,12 +10,14 @@ class PlayerMatchPoints {
   int playerMomPoints;
   int playerAttackerPoints;
   int playerDefenderPoints;
+  int playerTotalPoints;
   PlayerMatchPoints(
       {this.playerID,
       this.playerResultPoints,
       this.playerMomPoints,
       this.playerAttackerPoints,
-      this.playerDefenderPoints});
+      this.playerDefenderPoints,
+      this.playerTotalPoints});
 }
 
 class MatchPrediction {
@@ -163,15 +164,16 @@ void readPredictions(
 
   writePlayerPoints(playerMatchPointsList, matchNum);
   //writeStandings(playerMatchPointsList);
-
 }
 
 void writePlayerPoints(
     List<PlayerMatchPoints> playerMatchPointsList, int matchNum) {
   for (var num = 0; num < playerMatchPointsList.length; num++) {
-    _firestore.collection('matchpoints').doc(playerMatchPointsList[num].playerID).set({
-      'playerId': playerMatchPointsList[num].playerID
-    }, SetOptions(merge: true));
+    _firestore
+        .collection('matchpoints')
+        .doc(playerMatchPointsList[num].playerID)
+        .set({'playerId': playerMatchPointsList[num].playerID},
+            SetOptions(merge: true));
 
     _firestore
         .collection('matchpoints')
